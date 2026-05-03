@@ -21,7 +21,7 @@ def send_deal(product: dict) -> None:
             {"name": "Sale Price", "value": f"${sale:.2f}", "inline": True},
             {"name": "Savings", "value": f"${savings:.2f} ({pct:.0f}% off)", "inline": True},
         ],
-        "footer": {"text": "Best Buy Deal Alert"},
+        "footer": {"text": "Spooky Deals"},
     }
 
     if image:

@@ -6,7 +6,7 @@ from state import load_seen, save_seen
 
 
 def run():
-    print(f"[main] Starting Best Buy deal alerter (threshold: {config.DISCOUNT_THRESHOLD}% off, poll every {config.POLL_INTERVAL}s)")
+    print(f"[main] Starting Spooky Deals (threshold: {config.DISCOUNT_THRESHOLD}% off, poll every {config.POLL_INTERVAL}s)")
 
     while True:
         print("[main] Fetching deals from Best Buy...")
