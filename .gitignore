@@ -1,0 +1,4 @@
+.env
+seen_skus.json
+__pycache__/
+*.pyc
