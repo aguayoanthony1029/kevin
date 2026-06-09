@@ -31,9 +31,29 @@ timer-gated, wallet-draining husk. We're building the honest version:
 - **Rich content:** real crafting, meaningful skill trees, unique loot, co-op raids.
 - **Built to actually be fun** for you and a couple of friends on a Friday night.
 
+## ▶️ How to run it (the game now exists!)
+
+This repo is a real, runnable **Godot 4 project**. You can walk around a 3D world
+right now. Two ways to get it onto your PC:
+
+**Easiest — download the ZIP:**
+1. On this branch's GitHub page, click the green **`Code`** button → **Download ZIP**.
+2. Unzip it somewhere you'll remember (e.g. `Documents/Undying`).
+3. Open **Godot 4** → in the Project Manager click **Import** → browse to the unzipped
+   folder and pick **`project.godot`** → **Import & Edit**.
+4. Press **`F5`** (or the ▶️ Play button, top-right). You're walking around. 🎮
+   - **WASD** move · **mouse** look · **Shift** sprint · **Space** jump · **Esc** free the mouse.
+
+**Or with git (if you set it up):** `git clone` this repo, checkout the branch, and
+import the folder in Godot the same way.
+
+> First launch takes a few seconds while Godot builds its cache. If anything errors,
+> copy the message to me and we'll fix it together.
+
 ## This repo right now
 
-This repo currently holds the **plan**, not the game yet. Start here:
+The **plan** lives in `docs/`, and a **playable skeleton** lives at the repo root
+(`project.godot`, `main.tscn`, `player.tscn`, `scripts/`). Start here:
 
 | Doc | What's in it |
 |-----|--------------|
