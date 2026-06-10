@@ -1,11 +1,11 @@
 extends SceneTree
-## Boots the real game under a virtual display, lets it render a few seconds,
-## simulates a moment of WASD movement to verify the controller actually moves
-## the body, saves screenshots, and reports the player's position delta.
+## Inspection render: places one of each zombie breed at a fixed distance, frozen
+## in a mid-stride pose, and screenshots in day and night so we can judge the
+## models, animation pose, materials, and atmosphere cleanly.
 
 var world
 var frame := 0
-var start_pos := Vector3.ZERO
+var zombies := []
 
 
 func _initialize() -> void:
@@ -13,31 +13,48 @@ func _initialize() -> void:
 	root.add_child(world)
 
 
+func _pose_zombies() -> void:
+	var ZombieScript = load("res://scripts/zombie.gd")
+	var breeds := ["walker", "runner", "brute"]
+	for i in 3:
+		var z = ZombieScript.new()
+		z.setup(breeds[i])
+		z.world = world
+		z.position = Vector3(-3.5 + i * 3.5, 0.0, -7.0)
+		world.add_child(z)
+		zombies.append(z)
+
+
+func _freeze_and_pose() -> void:
+	for z in zombies:
+		z.set_physics_process(false)        # stop them chasing
+		z.look_at(Vector3(z.global_position.x, 0, 100), Vector3.UP)  # face the camera
+		z.moving = true
+		z.anim_phase = 0.9                  # a clear mid-stride frame
+		z._animate(0.0)
+	# tilt the view down a touch to frame the figures
+	world.player.camera.rotation.x = -0.12
+	world.hide_start_prompt()
+
+
 func _process(_delta: float) -> bool:
 	frame += 1
 
-	if frame == 30:
-		start_pos = world.player.global_position
-		var img := root.get_texture().get_image()
-		img.save_png("user://shot_start.png")
-		print("[cap] start pos: ", start_pos)
+	if frame == 15:
+		_pose_zombies()
+	if frame == 25:
+		_freeze_and_pose()
 
-	# simulate holding W for ~40 physics frames by injecting the key event
-	if frame >= 31 and frame <= 90:
-		var ev := InputEventKey.new()
-		ev.physical_keycode = KEY_W
-		ev.pressed = true
-		Input.parse_input_event(ev)
+	if frame == 35:
+		root.get_texture().get_image().save_png("user://shot_day.png")
+		print("[cap] day shot saved")
+		world.phase = world.Phase.NIGHT
+		world.night_number = 2
 
-	if frame == 95:
-		var moved: Vector3 = world.player.global_position - start_pos
-		print("[cap] end pos:   ", world.player.global_position)
-		print("[cap] moved by:  ", moved, "  (length ", moved.length(), ")")
-		var img := root.get_texture().get_image()
-		img.save_png("user://shot_after_move.png")
-
-	if frame == 100:
-		print("[cap] phase: ", world.phase, "  zombies: ", world.get_tree().get_nodes_in_group("zombie").size())
+	if frame == 140:
+		_freeze_and_pose()  # re-apply pose (physics-off zombies don't move)
+		root.get_texture().get_image().save_png("user://shot_night.png")
+		print("[cap] night shot saved")
 		quit(0)
 		return true
 

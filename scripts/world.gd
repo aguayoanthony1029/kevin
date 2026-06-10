@@ -200,10 +200,21 @@ func _setup_environment() -> void:
 	env = Environment.new()
 	env.background_mode = Environment.BG_SKY
 	var sky := Sky.new()
-	sky.sky_material = ProceduralSkyMaterial.new()
+	var sky_mat := ProceduralSkyMaterial.new()
+	sky_mat.sky_horizon_color = Color(0.55, 0.5, 0.45)
+	sky_mat.ground_horizon_color = Color(0.4, 0.38, 0.34)
+	sky.sky_material = sky_mat
 	env.sky = sky
 	env.ambient_light_source = Environment.AMBIENT_SOURCE_SKY
 	env.ambient_light_energy = 0.4
+
+	# atmospheric fog — thin and warm by day, thick and cold by night
+	env.fog_enabled = true
+	env.fog_density = 0.01
+	env.fog_light_color = Color(0.7, 0.72, 0.7)
+
+	# a bit of grit: gentle tonemapping so highlights don't blow out
+	env.tonemap_mode = Environment.TONE_MAPPER_FILMIC
 
 	var world_env := WorldEnvironment.new()
 	world_env.environment = env
@@ -211,14 +222,19 @@ func _setup_environment() -> void:
 
 
 func _update_lighting(delta: float) -> void:
-	# ease the world between warm daylight and cold moonlight
-	var target_energy := 1.2 if phase == Phase.DAY else 0.07
-	var target_ambient := 0.4 if phase == Phase.DAY else 0.1
-	var target_color := Color(1.0, 0.97, 0.9) if phase == Phase.DAY else Color(0.5, 0.58, 1.0)
-	var weight := clampf(delta * 1.2, 0.0, 1.0)
+	# ease the world between warm daylight and cold, foggy moonlight
+	var is_day := phase == Phase.DAY
+	var target_energy := 1.2 if is_day else 0.06
+	var target_ambient := 0.4 if is_day else 0.08
+	var target_color := Color(1.0, 0.95, 0.85) if is_day else Color(0.45, 0.55, 0.95)
+	var target_fog := 0.012 if is_day else 0.05
+	var target_fog_color := Color(0.7, 0.72, 0.7) if is_day else Color(0.12, 0.14, 0.22)
+	var weight := clampf(delta * 1.0, 0.0, 1.0)
 	sun.light_energy = lerpf(sun.light_energy, target_energy, weight)
 	env.ambient_light_energy = lerpf(env.ambient_light_energy, target_ambient, weight)
 	sun.light_color = sun.light_color.lerp(target_color, weight)
+	env.fog_density = lerpf(env.fog_density, target_fog, weight)
+	env.fog_light_color = env.fog_light_color.lerp(target_fog_color, weight)
 
 
 func _setup_ground() -> void:
