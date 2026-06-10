@@ -38,6 +38,9 @@ var bat: MeshInstance3D
 var pitch := 0.0
 var swing_timer := 0.0
 var swing_tween: Tween
+var started := false
+var pending_swing := false
+var pending_place := false
 
 var build_selection: int = 0  # 0 = not building, otherwise a KEY_* constant
 var ghost: MeshInstance3D
@@ -84,7 +87,10 @@ func _ready() -> void:
 	ghost.visible = false
 	world.add_child.call_deferred(ghost)
 
-	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	# Start with the cursor free. We only grab the mouse once the player clicks
+	# the window — this guarantees the game window has keyboard focus, which is
+	# the usual reason WASD "does nothing" right after launch.
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
 
 func _input(event: InputEvent) -> void:
@@ -107,12 +113,18 @@ func _input(event: InputEvent) -> void:
 				_set_build_selection(0 if build_selection == event.keycode else event.keycode)
 
 	if event is InputEventMouseButton and event.pressed \
-			and event.button_index == MOUSE_BUTTON_LEFT \
-			and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+			and event.button_index == MOUSE_BUTTON_LEFT:
+		if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
+			# First click: focus the window and grab the mouse to start playing.
+			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+			started = true
+			world.hide_start_prompt()
+			return
+		# Defer the actual action to the physics step so ray queries are safe.
 		if build_selection != 0:
-			_try_place()
+			pending_place = true
 		else:
-			_swing()
+			pending_swing = true
 
 
 func _physics_process(delta: float) -> void:
@@ -145,6 +157,14 @@ func _physics_process(delta: float) -> void:
 
 	if build_selection != 0:
 		_update_ghost()
+
+	# Handle deferred clicks here, where physics ray queries are safe to run.
+	if pending_swing:
+		pending_swing = false
+		_swing()
+	if pending_place:
+		pending_place = false
+		_try_place()
 
 
 # ---------------------------------------------------------------- combat

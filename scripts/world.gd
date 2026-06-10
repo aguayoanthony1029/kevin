@@ -44,6 +44,7 @@ var kills_label: Label
 var time_label: Label
 var build_label: Label
 var announce_label: Label
+var start_prompt: Label
 var damage_flash: ColorRect
 var announce_tween: Tween
 
@@ -341,6 +342,12 @@ func _setup_hud() -> void:
 	crosshair.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	ui.add_child(crosshair)
 
+	# "click to play" prompt — guarantees the window has focus before we grab the mouse
+	start_prompt = _make_label(Vector2(0, 320), "▶  CLICK TO PLAY\nWASD move · mouse look · left-click swing · 1/2/3 build", 30)
+	start_prompt.size = Vector2(1280, 90)
+	start_prompt.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	start_prompt.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+
 	# full-screen red flash for damage
 	damage_flash = ColorRect.new()
 	damage_flash.color = Color(0.8, 0, 0)
@@ -358,6 +365,11 @@ func _make_label(pos: Vector2, text: String, font_size: int) -> Label:
 	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	ui.add_child(label)
 	return label
+
+
+func hide_start_prompt() -> void:
+	if start_prompt:
+		start_prompt.visible = false
 
 
 func announce(message: String) -> void:
