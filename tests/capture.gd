@@ -20,18 +20,15 @@ func _pose_zombies() -> void:
 		var z = ZombieScript.new()
 		z.setup(breeds[i])
 		z.world = world
-		z.position = Vector3(-3.5 + i * 3.5, 0.0, -7.0)
+		z.position = Vector3(-2.5 + i * 2.5, 0.0, -4.0)
 		world.add_child(z)
 		zombies.append(z)
 
 
 func _freeze_and_pose() -> void:
 	for z in zombies:
-		z.set_physics_process(false)        # stop them chasing
+		z.set_physics_process(false)        # stop them chasing; anims keep playing
 		z.look_at(Vector3(z.global_position.x, 0, 100), Vector3.UP)  # face the camera
-		z.moving = true
-		z.anim_phase = 0.9                  # a clear mid-stride frame
-		z._animate(0.0)
 	# tilt the view down a touch to frame the figures
 	world.player.camera.rotation.x = -0.12
 	world.hide_start_prompt()
