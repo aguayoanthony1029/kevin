@@ -1,0 +1,18 @@
+; Engine configuration file.
+; Generated/maintained for the UNDYING project.
+; Safe to open in Godot 4.x — just import this folder.
+
+config_version=5
+
+[application]
+
+config/name="Undying"
+config/description="Co-op zombie survival & base-building. The honest version."
+run/main_scene="res://main.tscn"
+config/features=PackedStringArray("4.3", "Forward Plus")
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/stretch/mode="canvas_items"
