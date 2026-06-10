@@ -31,24 +31,45 @@ timer-gated, wallet-draining husk. We're building the honest version:
 - **Rich content:** real crafting, meaningful skill trees, unique loot, co-op raids.
 - **Built to actually be fun** for you and a couple of friends on a Friday night.
 
-## ▶️ How to run it (the game now exists!)
+## ▶️ How to play (the game is REAL now)
 
-This repo is a real, runnable **Godot 4 project**. You can walk around a 3D world
-right now. Two ways to get it onto your PC:
+This repo is a complete, playable **Godot 4 game** — the actual loop from the ads:
+gather by day, fortify your base, and survive five escalating nights of the dead.
 
-**Easiest — download the ZIP:**
+**Get it running:**
 1. On this branch's GitHub page, click the green **`Code`** button → **Download ZIP**.
 2. Unzip it somewhere you'll remember (e.g. `Documents/Undying`).
 3. Open **Godot 4** → in the Project Manager click **Import** → browse to the unzipped
    folder and pick **`project.godot`** → **Import & Edit**.
-4. Press **`F5`** (or the ▶️ Play button, top-right). You're walking around. 🎮
-   - **WASD** move · **mouse** look · **Shift** sprint · **Space** jump · **Esc** free the mouse.
+4. Press **`F5`** (or the ▶️ Play button, top-right). Good luck. 🧟
 
-**Or with git (if you set it up):** `git clone` this repo, checkout the branch, and
-import the folder in Godot the same way.
+**The goal:** survive **5 nights**. Each night the horde is bigger and meaner.
+Dawn heals you and burns away the stragglers. Die, and it's over.
+
+| Control | Action |
+|---------|--------|
+| **WASD** / mouse | Move / look |
+| **Shift** / **Space** | Sprint / jump |
+| **Left-click** | Swing your bat — kills zombies, chops trees, mines rocks |
+| **1 / 2 / 3** | Blueprint: wood wall (5 wood) / stone wall (6 stone) / spike trap (8 wood) |
+| **Left-click** (building) | Place it — green ghost means you can afford it |
+| **Q** | Put the blueprint away |
+| **Esc** | Free / capture the mouse |
+
+**Know your enemy:**
+- 🧟 **Walkers** — slow, relentless, they smash walls. Most of the horde.
+- 🏃 **Runners** (night 2+) — fast and vicious. Turn and fight or they'll bleed you.
+- 💪 **Brutes** (night 3+) — towering wall-breakers. Spike traps and stone walls.
+
+**Survivor tips:** stone walls hold ~2.5× longer than wood · spike traps shred
+anything standing on them but wear out · you only heal during the day · runners
+ignore your maze and come straight for you.
 
 > First launch takes a few seconds while Godot builds its cache. If anything errors,
 > copy the message to me and we'll fix it together.
+
+**For developers/CI:** there's a headless smoke test that boots the real game and
+drives the whole loop: `godot --headless -s tests/smoke_test.gd`
 
 ## This repo right now
 
